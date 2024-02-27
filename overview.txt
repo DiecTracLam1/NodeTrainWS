@@ -1,0 +1,15 @@
+->
+0) [config] moi truong.
+
+1) nhan vien 
+'ke toan'
+'it'
+
+2) co router + controlerr + [middware]. verify token (check role)
+3) handel error code.
+4) connect postgresql
+
+// parser
+// cors
+// limit
+// cross origin
