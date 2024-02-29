@@ -1,10 +1,11 @@
-import {Client} from 'pg';
+import { Client } from "pg";
 
 export const client = new Client({
-    user: 'postgres',
-    password: 'lam.dt',
-    host: 'localhost',
-    port: 3000,
-    database: 'progres',
+  user: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  host: process.env.DB_HOST,
+  port: 5432,
+  database: process.env.DB_NAME,
 });
- 
+
+export default client
