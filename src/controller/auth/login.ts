@@ -9,15 +9,14 @@ import {
 } from "inversify-express-utils";
 import { Request, Response, NextFunction } from "express";
 
-import { ItService } from "../service/employees";
+import { EmployeeService } from "../../service/employees";
 
-@controller("/employees/it")
-export class ItController implements interfaces.Controller {
-  constructor(@inject(ItService) private readonly _service: ItService) {
+@controller("/auth")
+export class LoginController implements interfaces.Controller {
+  constructor(@inject(EmployeeService) private readonly _service: EmployeeService) {
   }
 
-  @httpGet("/")
-  async getAll() {
+  async login() {
     // this.context.role == IT
 
     return await this._service.getList();

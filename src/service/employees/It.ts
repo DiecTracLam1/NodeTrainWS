@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 
-import { ItRepository } from "../../repository/It";
+import {ItRepository} from "../../repository/employees";
 
 @injectable()
 export class ItService {
