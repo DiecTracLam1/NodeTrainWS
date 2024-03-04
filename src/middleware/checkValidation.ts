@@ -1,56 +1,58 @@
-import { Request, Response, NextFunction} from "express";
-import  bcrypt from "bcrypt";
+import { Request, Response, NextFunction } from "express";
+import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { inject, injectable } from "inversify";
+import { EmployeeController } from "../controller/employee/EmployeeController";
 
-export function checkRole(
-  request: Request,
-  response: Response,
-  next: NextFunction
-) {}
+@injectable()
+export default class CheckValidator {
+  constructor(
+    @inject(EmployeeController)
+    private readonly _employeeController: EmployeeController
+  ) {}
 
-export async function checkLogin(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  if (!req.headers.authorization) {
-    res.send("Miss authorization");
-    res.status(401);
-    return;
-  } else {
+  checkJWT(req: any, res: Response, next: NextFunction){
+    if (!req.headers.authorization) {
+      res.status(401);
+      res.send("Miss authorization");
+    }
+    next();
+  }
+
+  async checkAuth(req: any, res: Response, next: NextFunction) {
     const token = req.headers.authorization.split(" ")[1];
-    // console.log(token);
-
-    let decode :any;
+    let decode: any;
     try {
-      decode = jwt.verify(token, process.env.SECRET_KEY);
-      // console.log(decode);
-    } catch (error:any) {
+      if (process.env.SECRET_KEY)
+        decode = jwt.verify(token, process.env.SECRET_KEY);
+    } catch (error: any) {
       res.json(error.message);
       res.status(401);
       return;
     }
 
+    let checkPassword: boolean = false;
+    let user;
     if (decode) {
-      const users = await db.User.find({}).toArray();
-      const index = users.findIndex((el) => {
-        let checkPassword = bcrypt.compare(req.body.password, el.password);
-        return decode.email === el.email && checkPassword;
-      });
+      let data = await this._employeeController.findEmployee(decode);
+      user = data[0];
+      checkPassword = await bcrypt.compare(decode.password, user.password);
+      req.role = user.role;
+    }
 
-      if (index < 0 ) {
-        res.send("User is not existed");
-        res.status(401);
-        return;
-      } else if (index > 0) {
-        req["userRole"] = "user";
-        next();
-      }
-
-    } else {
-      res.send("JWT is not valid");
+    if (!checkPassword) {
+      req.role = "";
+      res.send("User is not existed");
       res.status(401);
       return;
     }
+
+    next();
+  }
+
+  checkRole(req: any, res: Response, next: NextFunction, role: String) {
+    res.json(req)
+    if (req.role === role) next();
+    else res.send("Not persmission");
   }
 }

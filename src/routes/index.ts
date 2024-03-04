@@ -1,10 +1,19 @@
-import express , {Request , Response , NextFunction} from 'express'
-const router = express.Router()
+import express, { Request, Response, NextFunction } from "express";
+const router = express.Router();
 
-import EmployeeRoutes from './employee'
-import { checkLogin } from '../middleware/checkValidation'
+import unAuthRouter from "./unAuth";
+import authRouter from "./auth";
+import CheckValidator from "../middleware/checkValidation";
+import { container } from "../config/inversify";
 
-router.use('/employees' , checkAuthen,EmployeeRoutes )
-router.use('/login', login)
+const valiMiddleware = container.get(CheckValidator);
 
-export default router
+router.use(
+  "/",
+  (req, res, next) => valiMiddleware.checkJWT(req, res, next),
+  (req, res, next) => valiMiddleware.checkAuth(req, res, next),
+  unAuthRouter
+);
+router.use("/auth", authRouter);
+
+export default router;

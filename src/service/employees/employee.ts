@@ -8,7 +8,11 @@ export class EmployeeService {
     private readonly _repository: EmployeesRepository
   ) {}
 
-  async getList() {
+  async getList():Promise<any[]> {
     return await this._repository.getAll();
+  }
+
+  async findOne(data:any):Promise<any>{
+    return await this._repository.findOne(data)
   }
 }

@@ -9,12 +9,16 @@ export class ItRepository extends EmployeesRepository {
   }
 
   async getAll(): Promise<any> {
-    return await client.query(`Select * From employees where department_id = 60`);
+    const query = await client.query(
+      `Select * From employees where department_id = 60`
+    );
+    return query.rows;
   }
 
   async findOne(): Promise<any> {
-    {
-      return await client.query(`Select * From employees where department_id = 60`);
-    }
+    const query = await client.query(
+      `Select * From employees where department_id = 60`
+    );
+    return query.rows;
   }
 }

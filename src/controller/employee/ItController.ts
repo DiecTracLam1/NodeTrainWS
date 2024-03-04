@@ -6,19 +6,18 @@ import {
   request,
   response,
   next,
-  httpPost,
 } from "inversify-express-utils";
 import { Request, Response, NextFunction } from "express";
 
-
-import { EmployeeService } from "../../service/employees";
+import { ItService } from "../../service/employees";
 import { BaseController } from "../base";
 
-
-export class EmployeeController extends BaseController {
+@controller("/employees/it")
+@injectable()
+export class ItController extends BaseController {
   constructor(
-    @inject(EmployeeService) private readonly _EmployeeService: EmployeeService
+    @inject(ItService) private readonly _ItService: ItService
   ) {
-    super(_EmployeeService)
+    super(_ItService)
   }
 }

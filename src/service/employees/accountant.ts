@@ -2,7 +2,7 @@ import { inject, injectable } from "inversify";
 import { AccountantRepository } from "../../repository/employees";
 
 @injectable()
-export class AccountantService {
+export class AccountantService{
   constructor(
     @inject(AccountantRepository)
     private readonly _repository: AccountantRepository

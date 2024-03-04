@@ -5,16 +5,14 @@ import { IEmployees } from "interface/iEmployees";
 @injectable()
 export class EmployeesRepository implements IEmployees {
   async getAll(): Promise<any> {
-    return await client.query(
-      `Select * From employees`
-    );
+    const query = await client.query(`Select * From employees`);
+    return query.rows;
   }
 
-  async findOne(): Promise<any> {
-    {
-      return await client.query(
-        `Select * From employees`
-      );
-    }
+  async findOne(data: any): Promise<any> {
+    const query = await client.query(
+      `Select * From employees where email = '${data.email}'`
+    );
+    return query.rows;
   }
 }
