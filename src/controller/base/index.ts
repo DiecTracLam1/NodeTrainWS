@@ -1,32 +1,25 @@
 import { inject, injectable } from "inversify";
-import {
-  controller,
-  httpGet,
-  interfaces,
-  request,
-  response,
-  next,
-  httpPost,
-} from "inversify-express-utils";
+import { interfaces, request, response, next } from "inversify-express-utils";
 import { Request, Response, NextFunction } from "express";
+import ContextMiddleware from "../../middleware/ContextMiddle";
 
 @injectable()
 export class BaseController implements interfaces.Controller {
   private readonly _service;
-  constructor(service:any) {
-    this._service = service
+  @inject(ContextMiddleware) private _context: any;
+  constructor(service: any) {
+    this._service = service;
   }
 
-  async getAll(
-    @request() req: Request,
-    @response() res: Response,
-    @next() next: NextFunction
-  ) {
+  async getAll(y) {
     try {
       const list: any = await this._service.getList();
-      res.json(list);
+      console.log(this._context["_context"]._res);
+      this._context["_context"]._res.json(list);
+
     } catch (error) {
-      next(error);
+      res.send("error");
+      // next(error);
     }
   }
 
@@ -34,15 +27,15 @@ export class BaseController implements interfaces.Controller {
     return this._service.findOne(data);
   }
 
-  async store(data:any){
-    return this._service.create(data)
+  async store(data: any) {
+    return this._service.create(data);
   }
 
-  async delete(id:String){
-    return this._service.delete(id)
+  async delete(id: String) {
+    return this._service.delete(id);
   }
 
-  async update(id:String , data:any){
-    return this._service.update(id,data)
+  async update(id: String, data: any) {
+    return this._service.update(id, data);
   }
 }

@@ -34,7 +34,7 @@ export default class CheckValidator {
     let checkPassword: boolean = false;
     let user;
     if (decode) {
-      let data = await this._employeeController.findEmployee(decode);
+      let data = await this._employeeController.findOne(decode);
       user = data[0];
       checkPassword = await bcrypt.compare(decode.password, user.password);
       req.role = user.role;

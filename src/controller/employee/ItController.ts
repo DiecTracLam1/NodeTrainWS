@@ -13,7 +13,6 @@ import { ItService } from "../../service/employees";
 import { BaseController } from "../base";
 
 @controller("/employees/it")
-@injectable()
 export class ItController extends BaseController {
   constructor(
     @inject(ItService) private readonly _ItService: ItService

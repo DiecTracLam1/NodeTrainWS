@@ -1,14 +1,14 @@
 import { inject, injectable } from "inversify";
 import { AccountantRepository } from "../../repository/employees";
+import { BaseService } from "../../service/base";
 
 @injectable()
-export class AccountantService{
+export class AccountantService extends BaseService {
   constructor(
     @inject(AccountantRepository)
-    private readonly _repository: AccountantRepository
-  ) {}
-
-  async getList() {
-    return await this._repository.getAll();
+    private readonly _AccountantRepository: AccountantRepository
+  ) {
+    super(_AccountantRepository)
   }
 }
+

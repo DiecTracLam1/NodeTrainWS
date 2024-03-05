@@ -1,18 +1,13 @@
 import { inject, injectable } from "inversify";
 import { EmployeesRepository } from "../../repository/employees";
+import { BaseService } from "../../service/base";
 
 @injectable()
-export class EmployeeService {
+export class EmployeeService extends BaseService {
   constructor(
     @inject(EmployeesRepository)
-    private readonly _repository: EmployeesRepository
-  ) {}
-
-  async getList():Promise<any[]> {
-    return await this._repository.getAll();
-  }
-
-  async findOne(data:any):Promise<any>{
-    return await this._repository.findOne(data)
+    private readonly _EmployeeRepository: EmployeesRepository
+  ) {
+    super(_EmployeeRepository)
   }
 }

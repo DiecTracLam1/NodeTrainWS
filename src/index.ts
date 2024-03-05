@@ -1,7 +1,6 @@
 import "reflect-metadata";
 import { InversifyExpressServer } from "inversify-express-utils";
 import "dotenv/config";
-import "./controller/employee";
 
 import { serverConfig, serverErrorConfig, container } from "./config";
 
