@@ -12,7 +12,6 @@ router.post(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const data = await controller.login(req, res, next);
-      //   console.log(data);
       console.log("success");
       res.json(data)
     } catch (error) {

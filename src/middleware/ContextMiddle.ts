@@ -1,20 +1,11 @@
-import { Request, Response, NextFunction } from "express";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import { inject, injectable } from "inversify";
-import { EmployeeController } from "../controller/employee/EmployeeController";
 import { Context } from "../context";
 import { container } from "../config";
+import { TYPES } from "../constant/types";
 
-@injectable()
-export default class ContextMiddleware {
-  private _context: any;
-  constructor() {
-    this._context = new Context(container);
-  //   this._context._req = {
-  //     query,
-  //     headers,
-  //     body
-  //   }
-  }
-}
+
+export const contextMiddleware = (req: any, res: any, next: any) => {
+  let context = new Context(container, req, res);
+  // console.log('rebind , ', context)
+  container.rebind<Context>(TYPES.Context).toConstantValue(context);
+  next();
+};

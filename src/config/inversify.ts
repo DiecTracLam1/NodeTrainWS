@@ -16,9 +16,18 @@ import {
   ItController,
 } from "../controller/employee";
 import CheckValidator from "../middleware/checkValidation";
-import { results, interfaces } from "inversify-express-utils";
+import {
+  results,
+  interfaces,
+  BaseHttpController,
+} from "inversify-express-utils";
 import { Context } from "../context";
-import ContextMiddleware from "../middleware/ContextMiddle";
+import {
+  fluentProvide,
+  buildProviderModule,
+} from "inversify-binding-decorators";
+
+import { TYPES } from "../constant/types";
 
 const container = new Container();
 
@@ -35,9 +44,15 @@ container.bind(EmployeeService).toSelf();
 container.bind(EmployeeController).toSelf();
 
 container.bind(CheckValidator).toSelf();
-container.bind(ContextMiddleware).toSelf()
+container.bind<any>(TYPES.Context).toConstantValue(1);
 
-// container.bind(Context).toSelf();
-// container.bind<any>(Context).toConstantValue(1);
-container.bind<number>("Context").toConstantValue(1);
+
+// const provideFluent = fluentProvide(container);
+
+// export function ProvideAsSingleton(
+//   symbol: symbol.for('Context')
+// ): any {
+//   return provideFluent(symbol).().done(true);
+// }
+
 export { container };
