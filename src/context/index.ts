@@ -1,16 +1,16 @@
+import { fluentContext } from "../constant";
+import { TYPES } from "../constant/types";
 import { injectable } from "inversify";
+import { fluentProvide } from "inversify-binding-decorators";
 
-@injectable()
 class Context {
   public _container: any;
   public _req!: any;
-  public _res!: any;
   private _user:any
 
-  public constructor(container: any , req :any , res:any) {
+  public constructor(container: any , req :any ) {
     this._container = container;
     this._req = req;
-    this._res = res;
   }
 
   public getUser(){

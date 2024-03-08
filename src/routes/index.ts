@@ -17,9 +17,15 @@ console.log("routes");
 
 router.use(
   "/",
-  contextMiddleware,
-  valiMiddleware.checkJWT,
-  valiMiddleware.checkAuth,
+  (req: any) => {
+    let context = new Context(container, req);
+    container.rebind<Context>(TYPES.Context).toConstantValue(context);
+    // new contextMiddleware().bindContext(req);
+    return req.next();
+  },
+  // contextMiddleware,
+  // valiMiddleware.checkJWT,
+  // valiMiddleware.checkAuth,
   unAuthRouter
 );
 router.use("/auth", authRouter);

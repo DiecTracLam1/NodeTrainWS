@@ -16,20 +16,19 @@ import {
   ItController,
 } from "../controller/employee";
 import CheckValidator from "../middleware/checkValidation";
-import {
-  results,
-  interfaces,
-  BaseHttpController,
-} from "inversify-express-utils";
 import { Context } from "../context";
 import {
   fluentProvide,
   buildProviderModule,
 } from "inversify-binding-decorators";
+import getDecorators from 'inversify-inject-decorators';
 
 import { TYPES } from "../constant/types";
+import { EmployeeEntity } from "../entity";
 
 const container = new Container();
+
+container.bind(TYPES.EmployeeEntity).to(EmployeeEntity)
 
 container.bind(ItRepository).toSelf();
 container.bind(ItService).toSelf();
@@ -44,9 +43,11 @@ container.bind(EmployeeService).toSelf();
 container.bind(EmployeeController).toSelf();
 
 container.bind(CheckValidator).toSelf();
-container.bind<any>(TYPES.Context).toConstantValue(1);
+container.bind<any>(TYPES.Context).toConstantValue(3);
+container.bind<any>(TYPES.ContextMiddle).toConstantValue(2)
 
-
+// const { lazyInject } = getDecorators(container,false);
+container.load(buildProviderModule());
 // const provideFluent = fluentProvide(container);
 
 // export function ProvideAsSingleton(

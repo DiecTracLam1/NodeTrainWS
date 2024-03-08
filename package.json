@@ -20,12 +20,14 @@
     "inversify": "^6.0.2",
     "inversify-binding-decorators": "^4.0.0",
     "inversify-express-utils": "^6.4.6",
+    "inversify-inject-decorators": "^3.1.0",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "nodemon": "^3.1.0",
     "pg": "^8.11.3",
     "reflect-metadata": "^0.2.1",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "typeorm": "^0.3.20"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

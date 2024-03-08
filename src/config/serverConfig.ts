@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 import routes from "../routes";
-import client from "../model/connect";
+import { connectDb } from "../model/connect";
 
 export const serverConfig = async (app: Application) => {
   app.use(
@@ -15,14 +15,12 @@ export const serverConfig = async (app: Application) => {
   app.use(cors());
   app.use("/", routes);
 
-  await client.connect((err: any) => {
-    if (err) console.log(err);
-    else console.log("Connection successful");
-  });
+  await connectDb();
 };
 
 export const serverErrorConfig = (app: Application) => {
-  app.use((err: Error, _req: Request, res: Response, next: NextFunction) => {
-    res.status(500).send(err.message);
+  app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
+    res.status(err.status)
+    res.send(err.message)
   });
 };

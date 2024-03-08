@@ -12,6 +12,7 @@ export class BaseService {
   }
 
   async findOne(data: any): Promise<any> {
+    console.log("findOne : " , await this._repository.findOne(data))
     return await this._repository.findOne(data);
   }
 }

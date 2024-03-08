@@ -5,6 +5,8 @@ import { inject, injectable } from "inversify";
 import { EmployeeController } from "../controller/employee/EmployeeController";
 import { container } from "../config";
 import { TYPES } from "../constant/types";
+import { Api401Error, Api404Error , Api403Error } from "../core/errorResponse";
+import MESSAGE from "../core/messageCodes";
 
 @injectable()
 export default class CheckValidator {
@@ -15,8 +17,8 @@ export default class CheckValidator {
 
   checkJWT = (req: any, res: Response, next: NextFunction) => {
     if (!req.headers.authorization) {
-      res.status(401);
-      res.send("Miss authorization");
+      next(new Api404Error(MESSAGE.NON_AUTHORITATIVE_INFORMATION));
+      return;
     }
     next();
   };
@@ -28,8 +30,7 @@ export default class CheckValidator {
       if (process.env.SECRET_KEY)
         decode = jwt.verify(token, process.env.SECRET_KEY);
     } catch (error: any) {
-      res.json(error.message);
-      res.status(401);
+      next(new Api401Error(MESSAGE.UNAUTHORIZED));
       return;
     }
 
@@ -46,8 +47,7 @@ export default class CheckValidator {
 
     if (!checkPassword) {
       containerController.setUser({});
-      res.send("User is not existed");
-      res.status(401);
+      next(new Api404Error("User is not existed"));
       return;
     }
 
@@ -56,7 +56,9 @@ export default class CheckValidator {
 
   checkRole = (role: String) => {
     const containerController: any = container.get(TYPES.Context);
-    if (containerController.getUser().role === role) containerController._req.next();
-    else containerController._req.res.send("Not persmission");
+    if (containerController.getUser().role === role)
+      containerController._req.next();
+    else
+      return containerController._req.next(new Api403Error("Not persmission"));
   };
 }
