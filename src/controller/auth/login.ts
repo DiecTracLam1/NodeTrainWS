@@ -8,18 +8,23 @@ import { EmployeeService } from "../../service/employees";
 import { Api400Error, Api500Error } from "../../core/errorResponse";
 import MESSAGE from "../../core/messageCodes";
 
-export class LoginController {
+import { BaseController } from "../base";
+
+export class LoginController extends BaseController {
   constructor(
-    @inject(EmployeeService) private readonly _service: EmployeeService
-  ) {}
+    @inject(EmployeeService) private readonly _employeeService: EmployeeService
+  ) {
+    super(EmployeeService);
+  }
 
   async login(req: Request, res: Response, next: NextFunction) {
+    debugger
     const { email, password } = req.body;
     const msgBody = req.body;
     if (!email || !password)
       return next(new Api400Error("Missing email or password"));
     try {
-      const user = await this._service.findOne({ email });
+      const user = await this._employeeService.findOne({ email });
       if (!user) {
         return next(new Api400Error("Incorrect email or password"));
       }
@@ -35,7 +40,6 @@ export class LoginController {
         return { success: true, accessToken, userId };
       }
     } catch (error: any) {
-      0;
       return next(new Api500Error());
     }
   }

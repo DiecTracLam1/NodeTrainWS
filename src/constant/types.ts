@@ -4,7 +4,8 @@ const TYPES = {
     ThrowableWeapon: Symbol.for("ThrowableWeapon"),
     Context: Symbol.for("Context"),
     ContextMiddle:Symbol.for("ContextMiddle"),
-    EmployeeEntity: Symbol.for("EmployeeEntity")
+    EmployeeEntity: Symbol.for("EmployeeEntity"),
+    DepartmentEntity: Symbol.for("DepartmentEntity")
 };
 
 export { TYPES };

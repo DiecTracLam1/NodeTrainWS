@@ -6,6 +6,7 @@ import { Context } from "../../context";
 
 import { container } from "../../config";
 import { TYPES } from "../../constant/types";
+import { Api500Error } from "../../core/errorResponse";
 // import { fluent } from "../../middleware/ContextMiddle";
 
 @injectable()
@@ -16,17 +17,22 @@ export class BaseController implements interfaces.Controller {
     this._service = service;
   }
 
-  getAll = async (req:any,res:any,next:any) => {
+  getAll = async () => {
+    const containerControll: any = container.get(TYPES.Context);
     try {
       const list: any = await this._service.getList();
-      console.log("getAll");
-      console.log(this._contextMiddle)
-      // console.log(this._context.getContext());
-      const containerControll: any = container.get(TYPES.Context);
       containerControll._req.res.json(list);
     } catch (error: any) {
-      res.send(error.message);
-      // next(error);
+      // return next(new Api500Error());
+    }
+  };
+
+  getById = async () => {
+    const containerControll: any = container.get(TYPES.Context);
+    try {
+      return this._service.getById(containerControll._req.params?.id);
+    } catch (error) {
+      // return next(new Api500Error());
     }
   };
 
@@ -34,15 +40,18 @@ export class BaseController implements interfaces.Controller {
     return this._service.findOne(data);
   };
 
-  store = async (data: any) => {
-    return this._service.create(data);
+  store = async (req: any) => {
+    const containerControll: any = container.get(TYPES.Context);
+    const check =  this._service.store(req.body);
+    if(check) containerControll._req.res.send("Success")
   };
 
-  delete = async (id: String) => {
-    return this._service.delete(id);
+  delete = async (req: any) => {
+    return this._service.delete(req.params?.id);
   };
 
-  update = (id: String, data: any) => {
+  update = (req: any) => {
+    const { id, ...data } = req.body;
     return this._service.update(id, data);
   };
 }

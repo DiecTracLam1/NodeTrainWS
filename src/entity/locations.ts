@@ -1,9 +1,18 @@
 import { injectable } from "inversify";
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  ManyToOne,
+  JoinColumn,
+} from "typeorm";
+import { DepartmentEntity } from "./departments";
+import { EmployeeEntity } from "./employee";
 
 @injectable()
-@Entity({ name: "locations" , database: "NewBie"})
-export class Location {
+@Entity({ name: "locations" })
+export class LocationEntity {
   @PrimaryGeneratedColumn({ name: "location_id" })
   id!: number;
 
@@ -19,5 +28,6 @@ export class Location {
   @Column()
   state_province!: string;
 
-//   @OneToMany()
+  @OneToMany(() => DepartmentEntity, (department) => department.location)
+  departments!: DepartmentEntity[];
 }

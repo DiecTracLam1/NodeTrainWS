@@ -3,6 +3,6 @@ const router = express.Router();
 
 import EmployeeRoutes from "./employee/base";
 
-router.use("/employees", EmployeeRoutes);
+router.use("/employees",EmployeeRoutes);
 
 export default router;

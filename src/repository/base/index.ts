@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { db } from "../../model/connect";
-import { EmployeeEntity, Location } from "../../entity";
+import { EmployeeEntity } from "../../entity";
 import { IEmployees } from "../../interface/iEmployees";
 
 @injectable()
@@ -10,9 +10,15 @@ export class BaseRepository {
     this._entity = db.manager.getRepository(entity);
   }
 
+  getEntity = () => {
+    return this._entity;
+  };
+
   getAll = async () => {
     try {
-      const query = await this._entity.find(this._entity);
+      const query = await this._entity.find({
+        take: 10,
+      });
       return query;
     } catch (err) {
       console.log(err);
@@ -22,28 +28,35 @@ export class BaseRepository {
 
   getById = async (id: string): Promise<any> => {
     try {
-      let a: any = { id };
       const query = await this._entity.findOne({
-        ...a,
+        where: {
+          id,
+        },
       });
-    } catch (err) {}
+      return query;
+    } catch (err: any) {}
   };
 
   store = async (data: any) => {
-    return this._entity.save(data);
+    try {
+      this._entity.save(data);
+      return true
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  delete = async (id: String) => {
-    return this._entity.createQueryBuilder().delete().where("id = :id", { id });
+  delete = async (id: any) => {
+    try {
+      this._entity.delete({ id });
+      return true
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   update = async (id: String, data: any) => {
-    return await this._entity
-      .createQueryBuilder()
-      .update()
-      .set({ ...data })
-      .where("id = :id", { id })
-      .excute();
+    return await this._entity.update({ id }, { ...data });
   };
 
   findOne = async (data: any) => {

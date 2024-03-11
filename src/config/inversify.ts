@@ -1,35 +1,53 @@
 import { Container } from "inversify";
-
-import {
-  EmployeesRepository,
-  ItRepository,
-  AccountantRepository,
-} from "../repository/employees";
-import {
-  AccountantService,
-  EmployeeService,
-  ItService,
-} from "../service/employees";
-import {
-  AccountantController,
-  EmployeeController,
-  ItController,
-} from "../controller/employee";
-import CheckValidator from "../middleware/checkValidation";
-import { Context } from "../context";
 import {
   fluentProvide,
   buildProviderModule,
 } from "inversify-binding-decorators";
 import getDecorators from 'inversify-inject-decorators';
 
+//Entity
+import { DepartmentEntity, EmployeeEntity } from "../entity";
+
+// Repository
+import {
+  EmployeesRepository,
+  ItRepository,
+  AccountantRepository,
+} from "../repository/employees";
+import { DepartmentRepository } from "../repository/department";
+
+// Service
+import {
+  AccountantService,
+  EmployeeService,
+  ItService,
+} from "../service/employees";
+import { DepartmentService } from "../service/department";
+
+//Controller
+import {
+  AccountantController,
+  EmployeeController,
+  ItController,
+} from "../controller/employee";
+import { DepartmentController } from "../controller/department";
+
+import CheckValidator from "../middleware/checkValidation";
+import { Context } from "../context";
+
 import { TYPES } from "../constant/types";
-import { EmployeeEntity } from "../entity";
 
 const container = new Container();
 
 container.bind(TYPES.EmployeeEntity).to(EmployeeEntity)
+container.bind(TYPES.DepartmentEntity).to(DepartmentEntity)
 
+//Department
+container.bind(DepartmentRepository).toSelf();
+container.bind(DepartmentService).toSelf();
+container.bind(DepartmentController).toSelf();
+
+// Employee
 container.bind(ItRepository).toSelf();
 container.bind(ItService).toSelf();
 container.bind(ItController).toSelf();

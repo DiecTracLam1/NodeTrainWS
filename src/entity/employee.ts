@@ -1,5 +1,16 @@
 import { injectable } from "inversify";
-import { Entity, Column, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  ManyToMany,
+  ManyToOne,
+  JoinColumn,
+} from "typeorm";
+import { LocationEntity } from "./locations";
+import { JobEntity } from "./jobs";
+import { DepartmentEntity } from "./departments";
 
 @injectable()
 @Entity({ name: "employees" })
@@ -27,10 +38,18 @@ export class EmployeeEntity {
 
   @Column()
   department_id!: number;
-  
+
   @Column()
   password!: string;
 
   @Column()
   role!: string;
+
+  @ManyToOne(() => DepartmentEntity)
+  @JoinColumn({ name: "department_id" })
+  department!: DepartmentEntity[];
+
+  @ManyToOne(() => JobEntity)
+  @JoinColumn({ name: "job_id" })
+  jobs!: JobEntity;
 }

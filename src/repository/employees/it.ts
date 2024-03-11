@@ -4,28 +4,35 @@ import { TYPES } from "../../constant/types";
 import { EmployeesRepository } from "./employee";
 import { db } from "../../model/connect";
 import { EmployeeEntity } from "../../entity";
+import { BaseRepository } from "../base";
 
 @injectable()
-export class ItRepository extends EmployeesRepository {
-  constructor(
-    @inject(TYPES.EmployeeEntity) private employeeEntity: any
-  ) {
-    super(employeeEntity);
+export class ItRepository extends BaseRepository {
+  constructor(@inject(TYPES.EmployeeEntity) private _employeeEntity: any) {
+    super(EmployeeEntity);
   }
-  getAll = async () => {
-    const query = await db.manager.getRepository(EmployeeEntity).find({
-      where: {
-        department_id: 60,
-      },
-    });
-    console.log(query);
-    return query;
-  };
 
-  // async findOne(): Promise<any> {
-  //   const query = await client.query(
-  //     `Select * From employees where department_id = 60`
-  //   );
-  //   return query.rows;
-  // }
+  getAll = async () => {
+    try {
+      const [data, count] = await this.getEntity().findAndCount({
+        take: 10,
+        relations: {
+          jobs: true,
+          department: {
+            location: true,
+          },
+        },
+        where: {
+          department_id: 60,
+          // jobs: {
+          //   job_title : "Public Accountant"
+          // },
+        },
+      });
+      const query = { data, total: count };
+      return query;
+    } catch (error) {
+      console.log(error);
+    }
+  };
 }

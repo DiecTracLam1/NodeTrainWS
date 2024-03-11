@@ -15,6 +15,7 @@ const valiMiddleware = container.get(CheckValidator);
 
 console.log("routes");
 
+router.use("/auth", authRouter);
 router.use(
   "/",
   (req: any) => {
@@ -24,10 +25,10 @@ router.use(
     return req.next();
   },
   // contextMiddleware,
-  // valiMiddleware.checkJWT,
-  // valiMiddleware.checkAuth,
+  valiMiddleware.checkJWT,
+  valiMiddleware.checkAuth,
   unAuthRouter
 );
-router.use("/auth", authRouter);
+
 
 export default router;

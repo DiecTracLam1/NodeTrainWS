@@ -8,8 +8,7 @@ import { container } from "../../../config/inversify";
 
 const valiMiddleware = container.get(CheckValidator);
 
-router.use("/it",itRouter);
-router.use("/accountant", accountantRouter);
-
+router.use("/it", valiMiddleware.checkRole, itRouter);
+router.use("/accountant", valiMiddleware.checkRole, accountantRouter);
 
 export default router;
