@@ -1,5 +1,5 @@
 import { injectable } from "inversify";
-import { db } from "../../model/connect";
+import { db } from "../../database/connect";
 import { EmployeeEntity } from "../../entity";
 import { IEmployees } from "../../interface/iEmployees";
 
@@ -40,7 +40,7 @@ export class BaseRepository {
   store = async (data: any) => {
     try {
       this._entity.save(data);
-      return true
+      return true;
     } catch (err) {
       console.log(err);
     }
@@ -49,7 +49,7 @@ export class BaseRepository {
   delete = async (id: any) => {
     try {
       this._entity.delete({ id });
-      return true
+      return true;
     } catch (err) {
       console.log(err);
     }

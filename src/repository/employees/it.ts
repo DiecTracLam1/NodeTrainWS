@@ -1,8 +1,6 @@
 import { inject, injectable } from "inversify";
 
 import { TYPES } from "../../constant/types";
-import { EmployeesRepository } from "./employee";
-import { db } from "../../model/connect";
 import { EmployeeEntity } from "../../entity";
 import { BaseRepository } from "../base";
 
@@ -24,9 +22,6 @@ export class ItRepository extends BaseRepository {
         },
         where: {
           department_id: 60,
-          // jobs: {
-          //   job_title : "Public Accountant"
-          // },
         },
       });
       const query = { data, total: count };
@@ -35,4 +30,5 @@ export class ItRepository extends BaseRepository {
       console.log(error);
     }
   };
+
 }

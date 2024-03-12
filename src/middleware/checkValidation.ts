@@ -2,12 +2,14 @@ import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { inject, injectable } from "inversify";
+
 import { EmployeeController } from "../controller/employee/EmployeeController";
 import { container } from "../config";
 import { TYPES } from "../constant/types";
 import { Api401Error, Api404Error, Api403Error } from "../core/errorResponse";
 import MESSAGE from "../core/messageCodes";
 import { DepartmentController } from "../controller/department";
+import { clientRedis } from "../database/redis.connect";
 
 @injectable()
 export default class CheckValidator {
@@ -90,5 +92,26 @@ export default class CheckValidator {
     let checkExistDepartment = await this._departmentController.getById();
     if (checkExistDepartment) next();
     else next(new Api403Error("Department was not exist"));
+  };
+
+  checkEmployeeBlocked = async (
+    req: any,
+    res: Response,
+    next: NextFunction
+  ) => {
+    const { email } = req.body;
+
+    let listEmployees = JSON.parse(
+      await clientRedis.v4.GET("employeeListBlock")
+    );
+
+    if (!listEmployees) {
+      await clientRedis.v4.SET("employeeListBlock", JSON.stringify([]));
+      listEmployees = JSON.parse(await clientRedis.v4.GET("employeeListBlock"));
+    }
+
+    let employee = listEmployees.find((e: any) => e.email === email);
+    if (employee?.isBlocked) return res.send("Your account has been blocked");
+    next();
   };
 }

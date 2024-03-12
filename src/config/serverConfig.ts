@@ -3,7 +3,8 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 import routes from "../routes";
-import { connectDb } from "../model/connect";
+import { connectDb } from "../database/connect";
+import { clientRedis } from "../database/redis.connect";
 
 export const serverConfig = async (app: Application) => {
   app.use(
@@ -15,12 +16,13 @@ export const serverConfig = async (app: Application) => {
   app.use(cors());
   app.use("/", routes);
 
+  await clientRedis.connect()
   await connectDb();
 };
 
 export const serverErrorConfig = (app: Application) => {
   app.use((err: any, _req: Request, res: Response, next: NextFunction) => {
-    res.status(err.status)
-    res.send(err.message)
+    res.status(err.status);
+    res.send(err.message);
   });
 };

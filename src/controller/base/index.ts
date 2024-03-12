@@ -19,6 +19,7 @@ export class BaseController implements interfaces.Controller {
 
   getAll = async () => {
     const containerControll: any = container.get(TYPES.Context);
+    
     try {
       const list: any = await this._service.getList();
       containerControll._req.res.json(list);

@@ -8,6 +8,6 @@ export class EmployeeService extends BaseService {
     @inject(EmployeesRepository)
     private readonly _EmployeeRepository: EmployeesRepository
   ) {
-    super(_EmployeeRepository)
+    super(_EmployeeRepository);
   }
 }

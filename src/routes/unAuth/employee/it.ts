@@ -10,6 +10,8 @@ const valiMiddleware = container.get(CheckValidator);
 
 router.get("/", controller.getAll);
 router.get("/:id", controller.getById);
+router.get("/department",);
+
 router.post(
   "/",
   valiMiddleware.checkMailExists,

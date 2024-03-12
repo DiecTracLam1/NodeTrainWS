@@ -1,6 +1,6 @@
 import { inject, injectable } from "inversify";
 import { BaseRepository } from "../base";
-import { db } from "../../model/connect";
+import { db } from "../../database/connect";
 import { TYPES } from "../../constant/types";
 import { EmployeeEntity } from "../../entity";
 
