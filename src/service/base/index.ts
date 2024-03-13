@@ -7,8 +7,8 @@ export class BaseService {
     this._repository = repository;
   }
 
-  async getList(): Promise<any[]> {
-    return await this._repository.getAll();
+  async getList(query = {}): Promise<any[]> {
+    return await this._repository.getAll(query);
   }
 
   async findOne(data: any): Promise<any> {

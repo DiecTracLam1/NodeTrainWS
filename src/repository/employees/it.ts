@@ -10,7 +10,7 @@ export class ItRepository extends BaseRepository {
     super(EmployeeEntity);
   }
 
-  getAll = async () => {
+  getAll = async (query = {}) => {
     try {
       const [data, count] = await this.getEntity().findAndCount({
         take: 10,
@@ -19,16 +19,22 @@ export class ItRepository extends BaseRepository {
           department: {
             location: true,
           },
+          manager: {
+            jobs: true,
+            department: {
+              location: true,
+            },
+          },
         },
         where: {
+          ...query,
           department_id: 60,
         },
       });
-      const query = { data, total: count };
-      return query;
+      const response = { data, total: count };
+      return response;
     } catch (error) {
       console.log(error);
     }
   };
-
 }

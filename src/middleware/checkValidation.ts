@@ -101,17 +101,11 @@ export default class CheckValidator {
   ) => {
     const { email } = req.body;
 
-    let listEmployees = JSON.parse(
-      await clientRedis.v4.GET("employeeListBlock")
-    );
+    let employeeCount = await clientRedis.v4.hGet("employeeListBlock", email);
 
-    if (!listEmployees) {
-      await clientRedis.v4.SET("employeeListBlock", JSON.stringify([]));
-      listEmployees = JSON.parse(await clientRedis.v4.GET("employeeListBlock"));
-    }
+    if (!employeeCount) return next();
+    if (employeeCount >= 5) return res.send("Your account has been blocked");
 
-    let employee = listEmployees.find((e: any) => e.email === email);
-    if (employee?.isBlocked) return res.send("Your account has been blocked");
     next();
   };
 }

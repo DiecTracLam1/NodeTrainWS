@@ -14,12 +14,15 @@ export class BaseRepository {
     return this._entity;
   };
 
-  getAll = async () => {
+  getAll = async (query = {}) => {
     try {
-      const query = await this._entity.find({
+      const response = await this._entity.find({
+        where:{
+          ...query
+        },
         take: 10,
       });
-      return query;
+      return response;
     } catch (err) {
       console.log(err);
     }

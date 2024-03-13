@@ -10,14 +10,25 @@ export class AccountantRepository extends BaseRepository {
     super(EmployeeEntity);
   }
 
-  getAll = async () => {
-    const query = await this.getEntity().find({
-      take: 10,
-      where: {
-        department_id: 110,
-      },
-    });
-    console.log(query);
-    return query;
+  getAll = async (query = {}) => {
+    try {
+      const [data, count] = await this.getEntity().findAndCount({
+        take: 10,
+        relations: {
+          jobs: true,
+          department: {
+            location: true,
+          },
+        },
+        where: {
+          ...query,
+          department_id: 110,
+        },
+      });
+      const response = { data, total: count };
+      return response;
+    } catch (error) {
+      console.log(error);
+    }
   };
 }

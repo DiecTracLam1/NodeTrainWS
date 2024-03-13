@@ -7,6 +7,7 @@ import { Context } from "../../context";
 import { container } from "../../config";
 import { TYPES } from "../../constant/types";
 import { Api500Error } from "../../core/errorResponse";
+import { deepen } from "../../utils/deepen";
 // import { fluent } from "../../middleware/ContextMiddle";
 
 @injectable()
@@ -19,9 +20,10 @@ export class BaseController implements interfaces.Controller {
 
   getAll = async () => {
     const containerControll: any = container.get(TYPES.Context);
-    
+    const filter = JSON.parse(containerControll._req.query?.filters || "[]");
+    const query = deepen(filter);
     try {
-      const list: any = await this._service.getList();
+      const list: any = await this._service.getList(query);
       containerControll._req.res.json(list);
     } catch (error: any) {
       // return next(new Api500Error());
@@ -43,8 +45,8 @@ export class BaseController implements interfaces.Controller {
 
   store = async (req: any) => {
     const containerControll: any = container.get(TYPES.Context);
-    const check =  this._service.store(req.body);
-    if(check) containerControll._req.res.send("Success")
+    const check = this._service.store(req.body);
+    if (check) containerControll._req.res.send("Success");
   };
 
   delete = async (req: any) => {

@@ -26,7 +26,7 @@ export class DepartmentEntity {
   @JoinColumn({ name: "location_id" })
   location!: LocationEntity;
 
-  @OneToMany(()=> EmployeeEntity , (employee) => employee.id)
-  employee!: EmployeeEntity[]
+  @OneToMany(()=> EmployeeEntity , (employee) => employee.department)
+  employee!: EmployeeEntity[] 
 
 }

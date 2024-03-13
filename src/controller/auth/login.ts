@@ -1,5 +1,4 @@
 import { inject } from "inversify";
-import { interfaces } from "inversify-express-utils";
 import { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -8,7 +7,6 @@ import { clientRedis } from "../../database/redis.connect";
 
 import { EmployeeService } from "../../service/employees";
 import { Api400Error, Api500Error } from "../../core/errorResponse";
-import MESSAGE from "../../core/messageCodes";
 
 import { BaseController } from "../base";
 
@@ -20,7 +18,6 @@ export class LoginController extends BaseController {
   }
 
   login = async (req: Request, res: Response, next: NextFunction) => {
-
     const { email, password } = req.body;
     const msgBody = req.body;
     if (!email || !password)
@@ -30,49 +27,30 @@ export class LoginController extends BaseController {
 
       if (!user) return next(new Api400Error("Email was not exist"));
 
-      let listEmployees = JSON.parse(
-        await clientRedis.v4.GET("employeeListBlock")
-      );
+      let employeeCount = await clientRedis.v4.hGet("employeeListBlock", email);
 
       let checkPassword = await bcrypt.compare(password, user?.password || "");
 
       if (!checkPassword) {
-        let index = listEmployees.findIndex((e: any) => e.email === email);
-        let employee;
-        if (index >= 0)
-          employee = listEmployees[index] = {
-            ...listEmployees[index],
-            count: listEmployees[index].count + 1,
-          };
-        else {
-          employee = { email, count: 1, isBlocked: false };
-          listEmployees.push(employee);
+        let countBlock;
+        if (!employeeCount) {
+          countBlock = 1;
+          await clientRedis.v4.hSet("employeeListBlock", email, countBlock);
+        } else {
+          countBlock = Number.parseInt(employeeCount) + 1;
+          await clientRedis.v4.hSet("employeeListBlock", email, countBlock);
         }
 
-        if (employee?.count >= 5)
-          listEmployees[index] = {
-            ...listEmployees[index],
-            isBlocked: true,
-          };
-
-        await clientRedis.v4.SET(
-          "employeeListBlock",
-          JSON.stringify([...listEmployees])
-        );
-        
         return next(
           new Api400Error(
             `Incorrect password. You have ${
-              6 - employee?.count
+              6 - countBlock
             } attempts left to log in`
           )
         );
       }
-      listEmployees = listEmployees.filter((e: any) => e.email !== email);
-      await clientRedis.v4.SET(
-        "employeeListBlock",
-        JSON.stringify([...listEmployees])
-      );
+
+      await clientRedis.v4.hSet("employeeListBlock", email, 0);
 
       if (process.env.SECRET_KEY) {
         const accessToken = jwt.sign(msgBody, process.env.SECRET_KEY);

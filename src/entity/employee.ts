@@ -7,6 +7,7 @@ import {
   ManyToMany,
   ManyToOne,
   JoinColumn,
+  JoinTable,
 } from "typeorm";
 import { LocationEntity } from "./locations";
 import { JobEntity } from "./jobs";
@@ -34,9 +35,6 @@ export class EmployeeEntity {
   salary!: number;
 
   @Column()
-  manager_id!: string;
-
-  @Column()
   department_id!: number;
 
   @Column()
@@ -52,4 +50,13 @@ export class EmployeeEntity {
   @ManyToOne(() => JobEntity)
   @JoinColumn({ name: "job_id" })
   jobs!: JobEntity;
+
+  @ManyToOne(() => EmployeeEntity)
+  @JoinColumn({ name: "manager_id" })
+  manager!: EmployeeEntity;
+
+  @ManyToMany(() => EmployeeEntity)
+  @JoinTable()
+  assistant!: EmployeeEntity[];
+
 }
