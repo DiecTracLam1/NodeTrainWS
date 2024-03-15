@@ -6,7 +6,7 @@ import {
 import getDecorators from 'inversify-inject-decorators';
 
 //Entity
-import { DepartmentEntity, EmployeeEntity } from "../entity";
+import { DepartmentEntity, Employees } from "../entity";
 
 // Repository
 import {
@@ -39,7 +39,7 @@ import { TYPES } from "../constant/types";
 
 const container = new Container();
 
-container.bind(TYPES.EmployeeEntity).to(EmployeeEntity)
+container.bind(TYPES.EmployeeEntity).to(Employees)
 container.bind(TYPES.DepartmentEntity).to(DepartmentEntity)
 
 //Department

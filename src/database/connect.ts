@@ -1,6 +1,6 @@
 import { DataSource } from "typeorm";
 import {
-  EmployeeEntity,
+  Employees,
   DepartmentEntity,
   LocationEntity,
   JobEntity,
@@ -13,7 +13,7 @@ export const db = new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [EmployeeEntity, DepartmentEntity, LocationEntity, JobEntity],
+  entities: [Employees, DepartmentEntity, LocationEntity, JobEntity],
   logging: false,
 });
 

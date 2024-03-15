@@ -5,7 +5,7 @@ import {
   OneToMany,
 } from "typeorm";
 import { injectable } from "inversify";
-import { EmployeeEntity } from "./employee";
+import { Employees } from "./employee";
 
 @injectable()
 @Entity({ name: "jobs" })
@@ -22,7 +22,7 @@ export class JobEntity {
   @Column()
   max_salary!: number;
  
-  @OneToMany(()=>EmployeeEntity , (employee)=> employee.id)
-  employee!: EmployeeEntity[];
+  @OneToMany(()=>Employees , (employee)=> employee.id)
+  employee!: Employees[];
 
 }

@@ -2,12 +2,12 @@ import { inject, injectable } from "inversify";
 import { BaseRepository } from "../base";
 import { db } from "../../database/connect";
 import { TYPES } from "../../constant/types";
-import { EmployeeEntity } from "../../entity";
+import { Employees } from "../../entity";
 
 @injectable()
 export class AccountantRepository extends BaseRepository {
   constructor(@inject(TYPES.EmployeeEntity) private employeeEntity: any) {
-    super(EmployeeEntity);
+    super(Employees);
   }
 
   getAll = async (query = {}) => {

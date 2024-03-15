@@ -8,7 +8,7 @@ import {
 } from "typeorm";
 import { LocationEntity } from "./locations";
 import { injectable } from "inversify";
-import { EmployeeEntity } from "./employee";
+import { Employees } from "./employee";
 
 @injectable()
 @Entity({ name: "departments" })
@@ -24,9 +24,9 @@ export class DepartmentEntity {
 
   @ManyToOne(() => LocationEntity)
   @JoinColumn({ name: "location_id" })
-  location!: LocationEntity;
+  locations!: LocationEntity;
 
-  @OneToMany(()=> EmployeeEntity , (employee) => employee.department)
-  employee!: EmployeeEntity[] 
+  @OneToMany(()=> Employees , (employee) => employee.department)
+  employee!: Employees[] 
 
 }

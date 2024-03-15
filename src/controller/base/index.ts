@@ -7,7 +7,7 @@ import { Context } from "../../context";
 import { container } from "../../config";
 import { TYPES } from "../../constant/types";
 import { Api500Error } from "../../core/errorResponse";
-import { deepen } from "../../utils/deepen";
+import { deepen, deepen2 } from "../../utils/deepen";
 // import { fluent } from "../../middleware/ContextMiddle";
 
 @injectable()
@@ -22,8 +22,9 @@ export class BaseController implements interfaces.Controller {
     const containerControll: any = container.get(TYPES.Context);
     const filter = JSON.parse(containerControll._req.query?.filters || "[]");
     const query = deepen(filter);
+    const a = deepen2(filter);
     try {
-      const list: any = await this._service.getList(query);
+      const list: any = await this._service.getList(a);
       containerControll._req.res.json(list);
     } catch (error: any) {
       // return next(new Api500Error());

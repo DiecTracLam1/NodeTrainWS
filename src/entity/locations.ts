@@ -8,7 +8,6 @@ import {
   JoinColumn,
 } from "typeorm";
 import { DepartmentEntity } from "./departments";
-import { EmployeeEntity } from "./employee";
 
 @injectable()
 @Entity({ name: "locations" })
@@ -28,6 +27,6 @@ export class LocationEntity {
   @Column()
   state_province!: string;
 
-  @OneToMany(() => DepartmentEntity, (department) => department.location)
+  @OneToMany(() => DepartmentEntity, (department) => department.locations)
   departments!: DepartmentEntity[];
 }

@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
 import { db } from "../../database/connect";
-import { EmployeeEntity } from "../../entity";
+import { Employees } from "../../entity";
 import { IEmployees } from "../../interface/iEmployees";
 
 @injectable()

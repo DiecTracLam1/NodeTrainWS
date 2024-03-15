@@ -15,7 +15,7 @@ import { DepartmentEntity } from "./departments";
 
 @injectable()
 @Entity({ name: "employees" })
-export class EmployeeEntity {
+export class Employees {
   @PrimaryGeneratedColumn({ name: "employee_id" })
   id!: number;
 
@@ -51,12 +51,11 @@ export class EmployeeEntity {
   @JoinColumn({ name: "job_id" })
   jobs!: JobEntity;
 
-  @ManyToOne(() => EmployeeEntity)
+  @ManyToOne(() => Employees)
   @JoinColumn({ name: "manager_id" })
-  manager!: EmployeeEntity;
+  manager!: Employees;
 
-  @ManyToMany(() => EmployeeEntity)
+  @ManyToMany(() => Employees)
   @JoinTable()
-  assistant!: EmployeeEntity[];
-
+  assistant!: Employees[];
 }
